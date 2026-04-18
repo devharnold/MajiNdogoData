@@ -26,3 +26,49 @@ SELECT
 FROM md_water_services.water_source
 GROUP BY type_of_water_source 
 ORDER BY total_people_served DESC;
+
+
+SELECT
+    source_id,
+    type_of_water_source,
+    number_of_people_served,
+    RANK() OVER (
+        PARTITION BY type_of_water_source
+        ORDER BY number_of_people_served DESC
+    ) AS priority_rank
+FROM md_water_services.water_source
+ORDER BY type_of_water_source, priority_rank;
+
+
+SELECT
+    source_id,
+    type_of_water_source,
+    number_of_people_served,
+    DENSE_RANK() OVER (
+        PARTITION BY type_of_water_source
+        ORDER BY number_of_people_served DESC
+    ) AS priority_rank
+FROM md_water_services.water_source
+ORDER BY type_of_water_source, priority_rank;
+
+SELECT
+    source_id,
+    type_of_water_source,
+    number_of_people_served,
+    ROW_NUMBER() OVER (
+        PARTITION BY type_of_water_source
+        ORDER BY number_of_people_served DESC
+    ) AS priority_rank
+FROM md_water_services.water_source
+ORDER BY type_of_water_source, priority_rank;
+
+SELECT
+    source_id,
+    type_of_water_source,
+    number_of_people_served,
+    DENSE_RANK() OVER (
+        PARTITION BY type_of_water_source
+        ORDER BY number_of_people_served DESC
+    ) AS priority_rank
+FROM md_water_services.water_source
+ORDER BY type_of_water_source, priority_rank;
