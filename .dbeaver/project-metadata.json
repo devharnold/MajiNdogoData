@@ -1,1 +1,1 @@
-{"resources":{"Scripts/aggregate.sql":{"default-datasource":"mysql8-19d9b63fe5a-27cd739045251c24"},"Scripts/numserved.sql":{"default-datasource":"mysql8-19d9b63fe5a-27cd739045251c24"}}}
+{"resources":{"Scripts/aggregate.sql":{"default-datasource":"mysql8-19d9b63fe5a-27cd739045251c24"},"Scripts/numserved.sql":{"default-datasource":"mysql8-19d9b63fe5a-27cd739045251c24"},"Scripts/waterqueues.sql":{"default-datasource":"mysql8-19d9b63fe5a-27cd739045251c24"}}}

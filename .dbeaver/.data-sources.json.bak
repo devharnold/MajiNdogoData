@@ -18,25 +18,6 @@
 				},
 				"auth-model": "native"
 			}
-		},
-		"mysql8-19d9fe86f37-64fee7ccee304f0f": {
-			"provider": "mysql",
-			"driver": "mysql8",
-			"name": "localhost 2",
-			"save-password": true,
-			"configuration": {
-				"host": "localhost",
-				"port": "3306",
-				"url": "jdbc:mysql://localhost:3306/",
-				"configurationType": "MANUAL",
-				"home": "/usr",
-				"type": "dev",
-				"closeIdleConnection": true,
-				"provider-properties": {
-					"@dbeaver-show-all-dbs@": "true"
-				},
-				"auth-model": "native"
-			}
 		}
 	},
 	"connection-types": {
