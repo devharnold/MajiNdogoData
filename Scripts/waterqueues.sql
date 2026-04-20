@@ -99,7 +99,7 @@ SELECT
 	END
 		), 0) AS Saturday,
 		
-FROM
+FROM 
 	md_water_services.visits
 WHERE
 	time_in_queue != 0
