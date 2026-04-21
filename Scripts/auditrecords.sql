@@ -1,4 +1,4 @@
--- Part3 - Linking records(Between the Auditors Table and the Visits Table)
+-- Part3 - Linking records
 
 SELECT
 	auditor_report.location_id AS audit_location,
@@ -92,8 +92,28 @@ JOIN
 WHERE visits.visit_count = 1
 	AND water_quality.subjective_quality_score = 10;
 
+-- Selects data from the water_source, visits, auditor_report and water_quality tables
 SELECT DISTINCT
 	water_source.type_of_water_source AS survey_source,
+	visits.location_id,
+	visits.record_id,
+	auditor_report.true_water_source_score AS auditor_score,
+	auditor_report.type_of_water_source AS auditor_source,
+	water_quality.subjective_quality_score AS surveyor_score
+FROM
+	md_water_services.auditor_report
+JOIN
+	md_water_services.visits
+	ON auditor_report.location_id = visits.location_id
+JOIN
+	md_water_services.water_source
+	ON visits.source_id = water_source.source_id
+JOIN
+	md_water_services.water_quality
+	ON visits.record_id = water_quality.record_id;
+
+-- Removing the columns and JOIN statements for the water source
+SELECT DISTINCT
 	visits.location_id,
 	visits.record_id,
 	auditor_report.true_water_source_score AS auditor_score,
@@ -102,7 +122,10 @@ FROM
 	md_water_services.auditor_report
 JOIN
 	md_water_services.visits
-	ON audio
+	ON auditor_report.location_id = visits.location_id
+JOIN
+	md_water_services.water_quality
+	ON visits.record_id = water_quality.record_id;
 
 SELECT DISTINCT
     visits.location_id,
