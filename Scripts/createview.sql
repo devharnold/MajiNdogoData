@@ -82,6 +82,8 @@ GROUP BY
 ORDER BY
 	incorrect_count DESC;
 
+USE md_water_services;
+
 
 -- Finding the employees who have an above-average number of mistakes
 CREATE VIEW Incorrect_records AS (
