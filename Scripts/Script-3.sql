@@ -1,0 +1,1 @@
+-- CTE for the table needed for our analysis
