@@ -147,3 +147,104 @@ GROUP BY
 	ct.town_name
 ORDER BY
 	ct.town_name;
+
+
+
+-- This CTE calculates the total population of each town
+-- We will group by province name and town name since there are two Harares
+-- And join on a composite key since the town names are not unique
+WITH town_totals AS (
+	SELECT province_name, town_name, SUM(people_served) AS ttl_ppl_svd
+	FROM combined_analysts_table
+	GROUP BY province_name, town_name
+)
+SELECT
+	ct.province_name,
+	ct.town_name,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'river'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS river,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'shared_tap'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS shared_tap,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'tap_in_home'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS tap_in_home,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'tap_in_home_broken'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS tap_in_home_broken,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'well'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS well
+
+FROM
+	combined_analysts_table ct
+JOIN
+	town_totals tt 
+	ON ct.province_name = tt.province_name 
+	AND ct.town_name = tt.town_name
+
+GROUP BY
+	ct.province_name,
+	ct.town_name,
+	tt.ttl_ppl_svd
+ORDER BY
+	ct.town_name;
+
+-- Temporary tables to store the complex query result
+CREATE TEMPORARY TABLE town_aggregated_water_access
+WITH town_totals AS (
+	SELECT province_name, town_name, SUM(people_served) AS ttl_ppl_svd
+	FROM combined_analysts_table
+	GROUP BY province_name, town_name
+)
+SELECT
+	ct.province_name,
+	ct.town_name,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'river'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS river,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'shared_tap'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS shared_tap,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'tap_in_home'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS tap_in_home,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'tap_in_home_broken'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS tap_in_home_broken,
+
+	ROUND(SUM(CASE 
+		WHEN ct.type_of_water_source = 'well'
+		THEN ct.people_served ELSE 0 END) * 100.0 / tt.ttl_ppl_svd, 0) AS well
+
+FROM
+	combined_analysts_table ct
+JOIN
+	town_totals tt 
+	ON ct.province_name = tt.province_name 
+	AND ct.town_name = tt.town_name
+
+GROUP BY
+	ct.province_name,
+	ct.town_name,
+	tt.ttl_ppl_svd
+ORDER BY
+	ct.town_name;
+
+-- Town with the highest ratio of people who have taps but no drinking water
+SELECT
+	province_name,
+	town_name,
+	ROUND(tap_in_home_broken / (tap_in_home_broken + tap_in_home) * 100.0) AS Pct_broken_taps
+FROM
+	town_aggregated_water_access;
