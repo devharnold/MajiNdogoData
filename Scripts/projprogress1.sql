@@ -38,5 +38,20 @@ INNER JOIN
 	ON water_source.source_id = visits.source_id
 INNER JOIN
 	md_water_services.location
-	ON water_source.source_id = visits.location_id
-WHERE visits.visit_count = 1;
+	ON location.location_id = visits.location_id
+WHERE 
+	visits.visit_count = 1
+	AND (
+		(water_source.type_of_water_source = 'shared_tap'
+		AND visits.time_in_queue >= 30)
+	OR
+	-- Contaminated wells only
+	(water_source.type_of_water_source = 'well'
+	AND well_pollution.results != 'Clean')
+	
+	OR
+	(water_source.type_of_water_source = 'river')
+	
+	OR
+	(water_source.type_of_water_source = 'tap_in_home_broken')
+);
